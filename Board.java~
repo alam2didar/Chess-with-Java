@@ -1,0 +1,105 @@
+/**The Board class does much of the work here, keeping track of what pieces
+ * are where, and drawing the board on the screen.  
+ */
+public class Board {
+  /**These two fields are used to draw dark and light squares on the terminal
+   * for empty squares. */
+    private static final char hoz='\u2550';
+    private static final char ver='\u2551';
+    protected static int move_W = 0;
+    protected static int move_B = 0;
+    /**These two fields are used to control the diagonal movements of the Pawn*/
+    protected static boolean capture_W = false;
+    protected static boolean capture_B = false;
+  /**This field contains the board.  Every element either holds a Piece
+   * object, or is null.  A null element indicates an empty square. */
+  private Piece[][] board = new Piece[8][8];
+    /**Builds a Board object, filling in the board array.  You can either call
+    * setUpBoard, which sets up the full board, or setUpBeginningBoard, which
+    * only sets up Rooks.*/
+   public Board() {
+     
+     setUpBeginningBoard();
+   }
+ 
+   /**Builds two Rook objects per side, and assigns them to the array.*/ 
+  private void setUpBeginningBoard() {
+     board[3][3] = new Disk(new Location(0,0),Piece.WHITE);
+     board[4][4] = new Disk(new Location(7,0),Piece.WHITE);
+    
+     board[3][4] = new Disk(new Location(0,7),Piece.BLACK);
+     board[4][3] = new Disk(new Location(7,7),Piece.BLACK);
+   }
+    
+    public String toString() {
+        String s = "\n   ";
+        int r = 0, row=0;
+        // print the column chars across the top
+        for (int c = 0; c < 8; c++)
+            s+= (char)(c+'A') + "  ";
+        //end the column labels line
+        s+='\n'+"  ";
+        for(int i = 0;i < 8; i++){
+            for (int c = 0; c < 25; c++)
+                s+= hoz;
+            //end the column labels line
+            s+= '\n'+" "+(r+1);
+            r++;
+            for (int c = 0, col=0; c < 9; c++,col++){
+                s+= ver;
+                if( col<=7 && board[row][col] != null){
+                    s+=board[row][col].toString()+" ";
+                }
+                else{
+                    s+="  ";
+                }
+            }
+            //end the column labels line
+            s+='\n'+"  ";
+            row++;
+
+            
+       
+        }
+        for (int c = 0; c < 25; c++){
+            s+= hoz;
+        }
+            return s;
+    }
+    
+    public boolean makeMove(String spot, String color){
+        boolean val = false;
+        int r=0 ,w =0;
+        Location a = new Location(spot);
+        // Get that location's indices for the board array
+        int ar = a.getRowIndex();
+        int ac = a.getColIndex();
+        // If there is no piece at that location, throw an Exception
+        if(board[ar][ac] == null && color.equals("W")){
+            board[ar][ac] = new Disk(new Location(ar,ac),Piece.WHITE); 
+            val=true;
+        }
+        else if(board[ar][ac] == null && color.equals("B")){
+            board[ar][ac] = new Disk(new Location(ar,ac),Piece.BLACK); 
+            val=true;    
+        }
+        // for(int i=ar+1, j=ac; i<=7; i++){
+        //     if(board[i][j].getColor()== board[ar][ac].getColor())
+        //         r=i;w=j;
+        // }
+        // Location loc = new Location (r,w);
+        // Location [] l =  board[ar][ac].mustBeOpen(loc);
+        // for(int i = 0; i < l.length-1; i++){
+        //     if(board[ar][ac].getColor()==Piece.WHITE){
+        //         board[l[i].getRowIndex()][l[i].getColIndex()] = new Rook(new Location(l[i].getRowIndex(),l[i].getColIndex()),Piece.WHITE); 
+        //     }
+        //     else{
+        //         board[l[i].getRowIndex()][l[i].getColIndex()] = new Rook(new Location(l[i].getRowIndex(),l[i].getColIndex()),Piece.BLACK); 
+        //     }
+        // }
+        
+        return val;
+    
+    }
+
+}
